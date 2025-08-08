@@ -1,0 +1,134 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables and API keys
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+.env.test
+!.env.example
+!.env.local.example
+
+# API Keys and Secrets
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+config/secrets/
+
+# OAuth and Authentication
+*oauth*.json
+*credentials*.json
+*token*.json
+.quickbooks-token
+.shopify-token
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+database.json
+
+# Logs with potential sensitive data
+logs/
+*.log
+log.txt
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE and Editor
+.vscode/settings.json
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# Backup files
+*.backup
+*.bak
+*.swp
+*~
+
+# SSL Certificates
+*.crt
+*.cer
+certificates/
+
+# Private configuration
+private/
+.private/
+config.local.js
+config.local.ts
+settings.local.json
+
+# Service account files
+service-account*.json
+serviceAccount*.json
+gcp-key.json
+aws-credentials
+
+# Slack and Discord tokens
+slack-token*
+discord-token*
+webhook-url*
+
+# Redis
+dump.rdb
+redis.conf.local
+
+# Session storage
+sessions/
+.sessions/
+
+# Generated files with potential secrets
+generated-config/
+dist-config/
