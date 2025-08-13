@@ -1,0 +1,44 @@
+2025-08-07T19:34:42.385Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABoBoDJNC8SJXFHsJMBWwrlAgWtxC44JYJ9GxdtT7Kdl8kq15t&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fquickbooks%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=test-state
+2025-08-07T19:36:19.491Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABoBoDJNC8SJXFHsJMBWwrlAgWtxC44JYJ9GxdtT7Kdl8kq15t&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fquickbooks%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=test-state
+2025-08-07T19:36:23.688Z error: Create Token () threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_axios_dist_node_axios_cjs_48309a18._.js:1736:16)\n    at IncomingMessage.handleStreamEnd (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_axios_dist_node_axios_cjs_48309a18._.js:2621:21)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_axios_dist_node_axios_cjs_48309a18._.js:3480:49)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async GET (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/[root-of-the-server]__c885c04a._.js:216:30)\n    at async AppRouteRouteModule.do (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:38782)\n    at async AppRouteRouteModule.handle (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:45984)\n    at async responseGenerator (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_next_737e489d._.js:12864:38)\n    at async AppRouteRouteModule.handleResponse (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:1:183770)\n    at async handleResponse (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_next_737e489d._.js:12926:32)\n    at async handler (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/.next/server/chunks/node_modules_next_737e489d._.js:12978:13)\n    at async doRender (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:1592:34)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:1934:13)\n    at async DevServer.renderPageComponent (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:2400:24)\n    at async DevServer.renderToResponseImpl (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:2440:32)\n    at async DevServer.pipeImpl (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:1035:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/next-server.js:393:17)\n    at async DevServer.handleRequestImpl (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/base-server.js:925:17)\n    at async /Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/dev/next-dev-server.js:398:20\n    at async Span.traceAsyncFn (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/trace/trace.js:157:20)\n    at async DevServer.handleRequest (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/dev/next-dev-server.js:394:24)\n    at async invokeRender (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/lib/router-server.js:239:21)\n    at async handleRequest (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/lib/router-server.js:436:24)\n    at async requestHandlerImpl (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/lib/router-server.js:464:13)\n    at async Server.requestListener (/Users/lukefreeman/Code/freckled-hen/freckled-hen-system/node_modules/next/dist/server/lib/start-server.js:218:13)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Basic QUJvQm9ESk5DOFNKWEZIc0pNQld3cmxBZ1d0eEM0NEpZSjlHeGR0VDdLZGw4a3ExNXQ6M3V1MENnb29ZUVR2UGRYcnJ3clhIYmNndk1sYjNZb2ZNcjZUQ1FYdg==",
+      "User-Agent": "Intuit-OAuthClient-JS_4.2.0_Darwin_24.6.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+    "data": "",
+    "method": "post",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}

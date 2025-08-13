@@ -1,0 +1,18 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [{
+    "path": "/api/cron/daily-report",
+    "schedule": "0 14 * * *"
+  }],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
