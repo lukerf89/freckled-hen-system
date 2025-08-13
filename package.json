@@ -10,7 +10,8 @@
     "test:setup": "tsx scripts/test-setup.ts",
     "test:quickbooks": "tsx scripts/test-quickbooks-integration.ts",
     "test:kpi-calculator": "tsx scripts/test-kpi-calculator.ts",
-    "migrate": "tsx lib/db/migrate.ts"
+    "migrate": "tsx lib/db/migrate.ts",
+    "migrate:schema": "tsx lib/db/migrate-schema.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
