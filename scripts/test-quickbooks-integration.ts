@@ -7,7 +7,7 @@ dotenv.config({ path: '.env.local' });
 async function testQuickBooksIntegration() {
   console.log('🧪 Testing QuickBooks Integration...\n');
 
-  const qb = new QuickBooksIntegration('9341455142039676');
+  const qb = new QuickBooksIntegration(process.env.QUICKBOOKS_COMPANY_ID || '');
 
   try {
     // Test 1: Connection Test

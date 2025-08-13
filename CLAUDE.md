@@ -27,7 +27,7 @@ The application requires the following environment variables (typically in `.env
   - `QUICKBOOKS_CLIENT_SECRET`
   - `QUICKBOOKS_REDIRECT_URI`
   - `QUICKBOOKS_ENVIRONMENT` - "sandbox" or "production"
-  - `QUICKBOOKS_COMPANY_ID` - QuickBooks company ID (9341455142039676)
+  - `QUICKBOOKS_COMPANY_ID` - QuickBooks company ID
 
 ## Architecture Overview
 

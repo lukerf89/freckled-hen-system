@@ -53,7 +53,7 @@ interface ExpenseBreakdown {
 export class QuickBooksIntegration {
   private companyId: string;
 
-  constructor(companyId: string = '9341455142039676') {
+  constructor(companyId: string = process.env.QUICKBOOKS_COMPANY_ID || '') {
     this.companyId = companyId;
   }
 
