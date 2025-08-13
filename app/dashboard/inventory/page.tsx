@@ -44,6 +44,7 @@ export default function InventoryDashboard() {
   const [lowStockItems, setLowStockItems] = useState<LowStockItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchInventoryData = async () => {
@@ -98,6 +99,33 @@ export default function InventoryDashboard() {
       setError(err instanceof Error ? err.message : 'Failed to start sync');
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const resetSync = async () => {
+    try {
+      setResetting(true);
+      setError(null);
+      
+      const response = await fetch('/api/inventory/sync/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Reset failed');
+      }
+      
+      // Refresh data after reset
+      await fetchInventoryData();
+      
+    } catch (err) {
+      console.error('Error resetting sync:', err);
+      setError(err instanceof Error ? err.message : 'Failed to reset sync');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -167,23 +195,42 @@ export default function InventoryDashboard() {
             {stats?.lastSync && ` • Last sync: ${formatDate(stats.lastSync)}`}
           </p>
         </div>
-        <button
-          onClick={startSync}
-          disabled={syncing}
-          className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-        >
-          {syncing ? (
-            <>
-              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              Syncing...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Start Full Sync
-            </>
-          )}
-        </button>
+        <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-2">
+          <button
+            onClick={startSync}
+            disabled={syncing || resetting}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+          >
+            {syncing ? (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                Syncing...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Start Full Sync
+              </>
+            )}
+          </button>
+          <button
+            onClick={resetSync}
+            disabled={syncing || resetting}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            {resetting ? (
+              <>
+                <XCircle className="h-4 w-4 mr-2 animate-spin" />
+                Resetting...
+              </>
+            ) : (
+              <>
+                <XCircle className="h-4 w-4 mr-2" />
+                Reset Stuck Sync
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Error Alert */}
