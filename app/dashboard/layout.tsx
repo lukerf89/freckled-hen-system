@@ -18,6 +18,10 @@ export default function DashboardLayout({
       breadcrumbs.push({ name: 'KPI Dashboard', href: '/dashboard/kpi' });
     }
     
+    if (segments.includes('inventory')) {
+      breadcrumbs.push({ name: 'Inventory Management', href: '/dashboard/inventory' });
+    }
+    
     return breadcrumbs;
   };
 
