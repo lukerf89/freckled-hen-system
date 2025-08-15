@@ -278,7 +278,7 @@ export class SKUClassifier {
    * Determine initial clearance tier based on margin and quantity
    */
   private static determineClearanceTier(margin: number, quantity: number): string {
-    const qty = parseInt(quantity) || 0;
+    const qty = parseInt(quantity.toString()) || 0;
     
     // High margin + excess stock = cash generator potential
     if (margin >= 60 && qty > 10) {
@@ -302,7 +302,7 @@ export class SKUClassifier {
    * Calculate initial cash impact score
    */
   private static calculateCashImpactScore(margin: number, price: number, quantity: number, isQ4: boolean): number {
-    const qty = parseInt(quantity) || 0;
+    const qty = parseInt(quantity.toString()) || 0;
     const retailPrice = parseFloat(price) || 0;
     
     // Base score: margin × weekly revenue potential
