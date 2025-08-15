@@ -20,7 +20,8 @@
       "Bash(grep:*)",
       "Bash(sed:*)",
       "Bash(npx vercel:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(gh api:*)"
     ],
     "deny": [],
     "ask": []

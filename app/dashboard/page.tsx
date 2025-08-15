@@ -40,7 +40,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Dashboard Links */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         
         {/* KPI Dashboard */}
         <div className="bg-white rounded-lg shadow p-6">
@@ -78,31 +78,6 @@ export default function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Inventory KPIs - NEW */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">📈</span>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">Inventory KPIs</h3>
-              </div>
-              <p className="text-gray-600 text-sm mb-6">
-                Monitor cash impact priority, clearance opportunities, and profitability alerts in real-time.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <a 
-              href="/dashboard/inventory-kpis"
-              className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors"
-            >
-              View Inventory KPIs
             </a>
           </div>
         </div>

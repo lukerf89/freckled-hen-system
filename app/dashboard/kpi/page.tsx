@@ -6,6 +6,10 @@ import {
   PieChart, Pie, Cell, LineChart, Line
 } from 'recharts';
 import { AlertTriangle, TrendingUp, TrendingDown, DollarSign, Package, Target } from 'lucide-react';
+import InventoryAlertsSection from '@/components/inventory-kpis/InventoryAlertsSection';
+import InventoryMetricsGrid from '@/components/inventory-kpis/InventoryMetricsGrid';
+import InventoryProgressSection from '@/components/inventory-kpis/InventoryProgressSection';
+import InventoryChartsSection from '@/components/inventory-kpis/InventoryChartsSection';
 
 interface KPIData {
   cashOnHand: number;
@@ -60,6 +64,7 @@ const mockCashRunwayData = [
 export default function KPIDashboard() {
   const [kpiData, setKpiData] = useState<KPIData | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [inventoryData, setInventoryData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
@@ -70,29 +75,43 @@ export default function KPIDashboard() {
       setLoading(true);
       setError(null);
       
-      // Call the KPI calculation API
-      const response = await fetch('/api/kpi/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      // Fetch both KPI and inventory data in parallel
+      const [kpiResponse, inventoryResponse] = await Promise.all([
+        fetch('/api/kpi/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }),
+        fetch('/api/inventory-kpis/dashboard')
+      ]);
       
-      console.log('📡 Dashboard: API response status:', response.status, response.statusText);
+      console.log('📡 Dashboard: KPI API response status:', kpiResponse.status, kpiResponse.statusText);
+      console.log('📦 Dashboard: Inventory API response status:', inventoryResponse.status, inventoryResponse.statusText);
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch KPI data: ${response.status} ${response.statusText}`);
+      if (!kpiResponse.ok) {
+        throw new Error(`Failed to fetch KPI data: ${kpiResponse.status} ${kpiResponse.statusText}`);
       }
       
-      const data = await response.json();
-      console.log('📊 Dashboard: Received KPI data:', data);
-      console.log('💰 Dashboard: Yesterday Revenue:', data.kpis?.yesterdayRevenue);
-      console.log('📦 Dashboard: Units Shipped:', data.kpis?.unitsShippedYesterday);
-      console.log('🚨 Dashboard: Alerts count:', data.alerts?.length);
+      const kpiData = await kpiResponse.json();
+      console.log('📊 Dashboard: Received KPI data:', kpiData);
+      console.log('💰 Dashboard: Yesterday Revenue:', kpiData.kpis?.yesterdayRevenue);
+      console.log('📦 Dashboard: Units Shipped:', kpiData.kpis?.unitsShippedYesterday);
+      console.log('🚨 Dashboard: KPI Alerts count:', kpiData.alerts?.length);
+      
+      // Handle inventory data (don't fail if it errors)
+      let inventoryData = null;
+      if (inventoryResponse.ok) {
+        inventoryData = await inventoryResponse.json();
+        console.log('📈 Dashboard: Received inventory data:', inventoryData);
+      } else {
+        console.log('⚠️ Dashboard: Inventory API failed, continuing without inventory data');
+      }
       
       // Successful API call - use real data
-      setKpiData(data.kpis);
-      setAlerts(data.alerts || []);
+      setKpiData(kpiData.kpis);
+      setAlerts(kpiData.alerts || []);
+      setInventoryData(inventoryData);
       setLastRefresh(new Date());
-      console.log('✅ Dashboard: Successfully updated KPI data');
+      console.log('✅ Dashboard: Successfully updated all data');
       
     } catch (err) {
       console.error('❌ Dashboard: Error fetching KPI data:', err);
@@ -203,9 +222,9 @@ export default function KPIDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">KPI Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Business Intelligence Dashboard</h1>
           <p className="mt-2 text-gray-800">
-            Last updated: {lastRefresh.toLocaleTimeString()}
+            Financial KPIs & Inventory Intelligence - Last updated: {lastRefresh.toLocaleTimeString()}
             {error && ' (using fallback data)'}
           </p>
         </div>
@@ -473,10 +492,31 @@ export default function KPIDashboard() {
         </div>
       </div>
 
+      {/* Inventory Intelligence Section */}
+      {inventoryData && (
+        <>
+          <div className="border-t border-gray-200 pt-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">📦 Inventory Intelligence</h2>
+          </div>
+
+          {/* Inventory Metrics Grid */}
+          <InventoryMetricsGrid metrics={inventoryData.metrics || {}} />
+
+          {/* Inventory Alerts */}
+          <InventoryAlertsSection alerts={inventoryData.alerts || []} />
+
+          {/* Inventory Progress */}
+          <InventoryProgressSection progress={inventoryData.progress || {}} />
+
+          {/* Inventory Charts */}
+          <InventoryChartsSection charts={inventoryData.charts || {}} />
+        </>
+      )}
+
       {/* Data Source Status */}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Sources</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
             <span className="text-sm font-medium text-gray-800">QuickBooks Connected</span>
@@ -484,6 +524,12 @@ export default function KPIDashboard() {
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
             <span className="text-sm font-medium text-gray-800">Shopify Connected</span>
+          </div>
+          <div className="flex items-center p-3 bg-gray-50 rounded-lg">
+            <div className={`w-3 h-3 rounded-full mr-3 ${inventoryData ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+            <span className="text-sm font-medium text-gray-800">
+              {inventoryData ? 'CFO Intelligence Active' : 'CFO Intelligence Loading'}
+            </span>
           </div>
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
