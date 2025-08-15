@@ -14,26 +14,26 @@ export default function DashboardPage() {
   
   return (
     <div className="px-4 py-6">
-      <h2 className="text-2xl font-bold mb-6">System Status</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">System Status</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="font-semibold text-gray-800 mb-2">Database</h3>
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold text-gray-900">
             {status.database ? '✅ Connected' : '❌ Disconnected'}
           </p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="font-semibold text-gray-800 mb-2">Shopify</h3>
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold text-gray-900">
             {status.shopify ? '✅ Connected' : '❌ Disconnected'}
           </p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="font-semibold text-gray-800 mb-2">AI Service</h3>
-          <p className="text-2xl font-bold">
+          <p className="text-2xl font-bold text-gray-900">
             {status.ai ? '✅ Ready' : '⚠️ Not Configured'}
           </p>
         </div>
@@ -45,7 +45,7 @@ export default function DashboardPage() {
         {/* KPI Dashboard */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold">📊 KPI Dashboard</h3>
+            <h3 className="text-xl font-semibold text-gray-900">📊 KPI Dashboard</h3>
             <a
               href="/dashboard/kpi"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         {/* Inventory Management */}
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold">📦 Inventory Management</h3>
+            <h3 className="text-xl font-semibold text-gray-900">📦 Inventory Management</h3>
             <a
               href="/dashboard/inventory"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-xl font-semibold mb-4">🚀 Quick Actions</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-900">🚀 Quick Actions</h3>
         <p className="text-gray-700 mb-6">
           Common operations and integrations for your business management system.
         </p>

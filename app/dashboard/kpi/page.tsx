@@ -479,15 +479,15 @@ export default function KPIDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-            <span className="text-sm font-medium">QuickBooks Connected</span>
+            <span className="text-sm font-medium text-gray-800">QuickBooks Connected</span>
           </div>
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-            <span className="text-sm font-medium">Shopify Connected</span>
+            <span className="text-sm font-medium text-gray-800">Shopify Connected</span>
           </div>
           <div className="flex items-center p-3 bg-gray-50 rounded-lg">
             <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium text-gray-800">
               {error ? 'Using Fallback Data' : 'Live Data'}
             </span>
           </div>
