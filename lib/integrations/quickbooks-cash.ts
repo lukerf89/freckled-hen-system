@@ -80,7 +80,8 @@ export class QuickBooksCashManager {
       const { QuickBooksIntegration } = await import('./quickbooks');
       
       // Get cash position from QuickBooks
-      const cashPosition = await QuickBooksIntegration.getCashPosition();
+      const qbIntegration = new QuickBooksIntegration();
+      const cashPosition = await qbIntegration.getCashPosition();
       
       // For now, we'll use a conservative estimate for pending payables
       // This could be enhanced with actual QB payables data later
