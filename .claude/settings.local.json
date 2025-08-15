@@ -6,7 +6,12 @@
       "Bash(mv:*)",
       "Bash(node:*)",
       "Bash(rm:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(psql:*)",
+      "Bash(pkill:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

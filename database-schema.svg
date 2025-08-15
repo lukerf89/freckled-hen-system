@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="1000" viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .table-header { fill: #2563eb; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+      .table-name { fill: white; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+      .field-text { fill: #374151; font-family: Arial, sans-serif; font-size: 10px; }
+      .primary-key { fill: #dc2626; font-weight: bold; }
+      .foreign-key { fill: #059669; }
+      .table-box { fill: white; stroke: #d1d5db; stroke-width: 1; }
+      .relationship-line { stroke: #6b7280; stroke-width: 2; fill: none; }
+      .relationship-arrow { fill: #6b7280; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" class="table-header" font-size="18">Freckled Hen Inventory Management - Database Schema</text>
+  
+  <!-- Core Shopify Tables -->
+  
+  <!-- shopify_products -->
+  <g id="products">
+    <rect x="50" y="80" width="220" height="280" class="table-box"/>
+    <rect x="50" y="80" width="220" height="25" class="table-header"/>
+    <text x="160" y="97" text-anchor="middle" class="table-name">shopify_products</text>
+    
+    <text x="60" y="115" class="field-text primary-key">id (PK)</text>
+    <text x="60" y="130" class="field-text">shopify_id</text>
+    <text x="60" y="145" class="field-text">shopify_gid</text>
+    <text x="60" y="160" class="field-text">handle</text>
+    <text x="60" y="175" class="field-text">title</text>
+    <text x="60" y="190" class="field-text">vendor</text>
+    <text x="60" y="205" class="field-text">product_type</text>
+    <text x="60" y="220" class="field-text">status</text>
+    <text x="60" y="235" class="field-text">tags</text>
+    <text x="60" y="250" class="field-text">created_at_shopify</text>
+    <text x="60" y="265" class="field-text">updated_at_shopify</text>
+    <text x="60" y="280" class="field-text">published_at</text>
+    <text x="60" y="295" class="field-text">created_at</text>
+    <text x="60" y="310" class="field-text">updated_at</text>
+    <text x="60" y="325" class="field-text">synced_at</text>
+    <text x="60" y="345" class="field-text" font-size="9" fill="#6b7280">Indexes: handle, status, synced_at</text>
+  </g>
+  
+  <!-- shopify_variants -->
+  <g id="variants">
+    <rect x="320" y="80" width="220" height="380" class="table-box"/>
+    <rect x="320" y="80" width="220" height="25" class="table-header"/>
+    <text x="430" y="97" text-anchor="middle" class="table-name">shopify_variants</text>
+    
+    <text x="330" y="115" class="field-text primary-key">id (PK)</text>
+    <text x="330" y="130" class="field-text foreign-key">product_id (FK)</text>
+    <text x="330" y="145" class="field-text">shopify_id</text>
+    <text x="330" y="160" class="field-text">shopify_gid</text>
+    <text x="330" y="175" class="field-text">shopify_product_id</text>
+    <text x="330" y="190" class="field-text">sku</text>
+    <text x="330" y="205" class="field-text">barcode</text>
+    <text x="330" y="220" class="field-text">title</text>
+    <text x="330" y="235" class="field-text">option1, option2, option3</text>
+    <text x="330" y="250" class="field-text">price</text>
+    <text x="330" y="265" class="field-text">compare_at_price</text>
+    <text x="330" y="280" class="field-text">cost</text>
+    <text x="330" y="295" class="field-text">weight, weight_unit</text>
+    <text x="330" y="310" class="field-text">inventory_quantity</text>
+    <text x="330" y="325" class="field-text">available_quantity</text>
+    <text x="330" y="340" class="field-text">inventory_policy</text>
+    <text x="330" y="355" class="field-text">fulfillment_service</text>
+    <text x="330" y="370" class="field-text">requires_shipping</text>
+    <text x="330" y="385" class="field-text">taxable</text>
+    <text x="330" y="400" class="field-text">position</text>
+    <text x="330" y="415" class="field-text">created_at_shopify</text>
+    <text x="330" y="430" class="field-text">updated_at_shopify</text>
+    <text x="330" y="445" class="field-text">synced_at</text>
+    <text x="330" y="465" class="field-text" font-size="9" fill="#6b7280">Indexes: sku, barcode, product_id, inventory_quantity</text>
+  </g>
+  
+  <!-- shopify_locations -->
+  <g id="locations">
+    <rect x="590" y="80" width="200" height="220" class="table-box"/>
+    <rect x="590" y="80" width="200" height="25" class="table-header"/>
+    <text x="690" y="97" text-anchor="middle" class="table-name">shopify_locations</text>
+    
+    <text x="600" y="115" class="field-text primary-key">id (PK)</text>
+    <text x="600" y="130" class="field-text">shopify_id</text>
+    <text x="600" y="145" class="field-text">shopify_gid</text>
+    <text x="600" y="160" class="field-text">name</text>
+    <text x="600" y="175" class="field-text">address1, address2</text>
+    <text x="600" y="190" class="field-text">city, province, country</text>
+    <text x="600" y="205" class="field-text">zip, phone</text>
+    <text x="600" y="220" class="field-text">active</text>
+    <text x="600" y="235" class="field-text">is_primary</text>
+    <text x="600" y="250" class="field-text">created_at</text>
+    <text x="600" y="265" class="field-text">updated_at</text>
+  </g>
+  
+  <!-- shopify_inventory_levels -->
+  <g id="inventory_levels">
+    <rect x="820" y="80" width="220" height="240" class="table-box"/>
+    <rect x="820" y="80" width="220" height="25" class="table-header"/>
+    <text x="930" y="97" text-anchor="middle" class="table-name">shopify_inventory_levels</text>
+    
+    <text x="830" y="115" class="field-text primary-key">id (PK)</text>
+    <text x="830" y="130" class="field-text foreign-key">variant_id (FK)</text>
+    <text x="830" y="145" class="field-text foreign-key">location_id (FK)</text>
+    <text x="830" y="160" class="field-text">inventory_item_id</text>
+    <text x="830" y="175" class="field-text">available_quantity</text>
+    <text x="830" y="190" class="field-text">incoming_quantity</text>
+    <text x="830" y="205" class="field-text">committed_quantity</text>
+    <text x="830" y="220" class="field-text">updated_at_shopify</text>
+    <text x="830" y="235" class="field-text">created_at</text>
+    <text x="830" y="250" class="field-text">updated_at</text>
+    <text x="830" y="265" class="field-text">synced_at</text>
+    <text x="830" y="285" class="field-text" font-size="9" fill="#6b7280">Unique: variant_id + location_id</text>
+    <text x="830" y="300" class="field-text" font-size="9" fill="#6b7280">Indexes: variant, location, synced_at</text>
+  </g>
+  
+  <!-- Supporting Tables -->
+  
+  <!-- shopify_product_images -->
+  <g id="product_images">
+    <rect x="50" y="400" width="220" height="180" class="table-box"/>
+    <rect x="50" y="400" width="220" height="25" class="table-header"/>
+    <text x="160" y="417" text-anchor="middle" class="table-name">shopify_product_images</text>
+    
+    <text x="60" y="435" class="field-text primary-key">id (PK)</text>
+    <text x="60" y="450" class="field-text foreign-key">product_id (FK)</text>
+    <text x="60" y="465" class="field-text">shopify_id</text>
+    <text x="60" y="480" class="field-text">shopify_product_id</text>
+    <text x="60" y="495" class="field-text">position</text>
+    <text x="60" y="510" class="field-text">src</text>
+    <text x="60" y="525" class="field-text">width, height</text>
+    <text x="60" y="540" class="field-text">alt_text</text>
+    <text x="60" y="555" class="field-text">created_at_shopify</text>
+    <text x="60" y="570" class="field-text">updated_at_shopify</text>
+  </g>
+  
+  <!-- shopify_collections -->
+  <g id="collections">
+    <rect x="320" y="500" width="220" height="200" class="table-box"/>
+    <rect x="320" y="500" width="220" height="25" class="table-header"/>
+    <text x="430" y="517" text-anchor="middle" class="table-name">shopify_collections</text>
+    
+    <text x="330" y="535" class="field-text primary-key">id (PK)</text>
+    <text x="330" y="550" class="field-text">shopify_id</text>
+    <text x="330" y="565" class="field-text">shopify_gid</text>
+    <text x="330" y="580" class="field-text">handle</text>
+    <text x="330" y="595" class="field-text">title</text>
+    <text x="330" y="610" class="field-text">collection_type</text>
+    <text x="330" y="625" class="field-text">sort_order</text>
+    <text x="330" y="640" class="field-text">products_count</text>
+    <text x="330" y="655" class="field-text">published</text>
+    <text x="330" y="670" class="field-text">created_at_shopify</text>
+    <text x="330" y="685" class="field-text">synced_at</text>
+  </g>
+  
+  <!-- shopify_product_collections (junction table) -->
+  <g id="product_collections">
+    <rect x="590" y="500" width="200" height="120" class="table-box"/>
+    <rect x="590" y="500" width="200" height="25" class="table-header"/>
+    <text x="690" y="517" text-anchor="middle" class="table-name">product_collections</text>
+    
+    <text x="600" y="535" class="field-text primary-key">id (PK)</text>
+    <text x="600" y="550" class="field-text foreign-key">product_id (FK)</text>
+    <text x="600" y="565" class="field-text foreign-key">collection_id (FK)</text>
+    <text x="600" y="580" class="field-text">position</text>
+    <text x="600" y="595" class="field-text">created_at</text>
+    <text x="600" y="615" class="field-text" font-size="9" fill="#6b7280">Unique: product_id + collection_id</text>
+  </g>
+  
+  <!-- Monitoring & AI Tables -->
+  
+  <!-- shopify_sync_history -->
+  <g id="sync_history">
+    <rect x="50" y="620" width="220" height="220" class="table-box"/>
+    <rect x="50" y="620" width="220" height="25" class="table-header"/>
+    <text x="160" y="637" text-anchor="middle" class="table-name">shopify_sync_history</text>
+    
+    <text x="60" y="655" class="field-text primary-key">id (PK)</text>
+    <text x="60" y="670" class="field-text">sync_type</text>
+    <text x="60" y="685" class="field-text">status</text>
+    <text x="60" y="700" class="field-text">products_synced</text>
+    <text x="60" y="715" class="field-text">variants_synced</text>
+    <text x="60" y="730" class="field-text">inventory_levels_synced</text>
+    <text x="60" y="745" class="field-text">errors_count</text>
+    <text x="60" y="760" class="field-text">error_details (JSONB)</text>
+    <text x="60" y="775" class="field-text">started_at</text>
+    <text x="60" y="790" class="field-text">completed_at</text>
+    <text x="60" y="805" class="field-text">duration_seconds</text>
+    <text x="60" y="825" class="field-text" font-size="9" fill="#6b7280">Indexes: status, type, started_at</text>
+  </g>
+  
+  <!-- inventory_alerts -->
+  <g id="alerts">
+    <rect x="820" y="360" width="220" height="200" class="table-box"/>
+    <rect x="820" y="360" width="220" height="25" class="table-header"/>
+    <text x="930" y="377" text-anchor="middle" class="table-name">inventory_alerts</text>
+    
+    <text x="830" y="395" class="field-text primary-key">id (PK)</text>
+    <text x="830" y="410" class="field-text foreign-key">variant_id (FK)</text>
+    <text x="830" y="425" class="field-text">alert_type</text>
+    <text x="830" y="440" class="field-text">threshold_value</text>
+    <text x="830" y="455" class="field-text">current_value</text>
+    <text x="830" y="470" class="field-text">message</text>
+    <text x="830" y="485" class="field-text">severity</text>
+    <text x="830" y="500" class="field-text">acknowledged</text>
+    <text x="830" y="515" class="field-text">acknowledged_by</text>
+    <text x="830" y="530" class="field-text">acknowledged_at</text>
+    <text x="830" y="545" class="field-text">created_at</text>
+  </g>
+  
+  <!-- ai_processing_queue -->
+  <g id="ai_queue">
+    <rect x="1070" y="80" width="220" height="280" class="table-box"/>
+    <rect x="1070" y="80" width="220" height="25" class="table-header"/>
+    <text x="1180" y="97" text-anchor="middle" class="table-name">ai_processing_queue</text>
+    
+    <text x="1080" y="115" class="field-text primary-key">id (PK)</text>
+    <text x="1080" y="130" class="field-text foreign-key">variant_id (FK)</text>
+    <text x="1080" y="145" class="field-text">processing_type</text>
+    <text x="1080" y="160" class="field-text">status</text>
+    <text x="1080" y="175" class="field-text">priority</text>
+    <text x="1080" y="190" class="field-text">input_data (JSONB)</text>
+    <text x="1080" y="205" class="field-text">output_data (JSONB)</text>
+    <text x="1080" y="220" class="field-text">error_message</text>
+    <text x="1080" y="235" class="field-text">attempts</text>
+    <text x="1080" y="250" class="field-text">max_attempts</text>
+    <text x="1080" y="265" class="field-text">scheduled_at</text>
+    <text x="1080" y="280" class="field-text">started_at</text>
+    <text x="1080" y="295" class="field-text">completed_at</text>
+    <text x="1080" y="310" class="field-text">created_at</text>
+    <text x="1080" y="330" class="field-text" font-size="9" fill="#6b7280">Indexes: status, priority, variant_id</text>
+  </g>
+  
+  <!-- shopify_metafields -->
+  <g id="metafields">
+    <rect x="1070" y="400" width="220" height="200" class="table-box"/>
+    <rect x="1070" y="400" width="220" height="25" class="table-header"/>
+    <text x="1180" y="417" text-anchor="middle" class="table-name">shopify_metafields</text>
+    
+    <text x="1080" y="435" class="field-text primary-key">id (PK)</text>
+    <text x="1080" y="450" class="field-text">shopify_id</text>
+    <text x="1080" y="465" class="field-text">namespace</text>
+    <text x="1080" y="480" class="field-text">key</text>
+    <text x="1080" y="495" class="field-text">value</text>
+    <text x="1080" y="510" class="field-text">value_type</text>
+    <text x="1080" y="525" class="field-text">owner_id</text>
+    <text x="1080" y="540" class="field-text">owner_resource</text>
+    <text x="1080" y="555" class="field-text">created_at_shopify</text>
+    <text x="1080" y="570" class="field-text">updated_at_shopify</text>
+    <text x="1080" y="590" class="field-text" font-size="9" fill="#6b7280">Indexes: owner, namespace+key</text>
+  </g>
+  
+  <!-- Relationship Lines -->
+  
+  <!-- Products to Variants -->
+  <path d="M 270 220 L 320 220" class="relationship-line"/>
+  <polygon points="320,220 315,217 315,223" class="relationship-arrow"/>
+  
+  <!-- Variants to Inventory Levels -->
+  <path d="M 540 300 L 820 200" class="relationship-line"/>
+  <polygon points="820,200 815,197 815,203" class="relationship-arrow"/>
+  
+  <!-- Locations to Inventory Levels -->
+  <path d="M 790 180 L 820 180" class="relationship-line"/>
+  <polygon points="820,180 815,177 815,183" class="relationship-arrow"/>
+  
+  <!-- Products to Images -->
+  <path d="M 160 360 L 160 400" class="relationship-line"/>
+  <polygon points="160,400 157,395 163,395" class="relationship-arrow"/>
+  
+  <!-- Products to Product Collections -->
+  <path d="M 270 300 Q 400 380 590 550" class="relationship-line"/>
+  <polygon points="590,550 585,547 585,553" class="relationship-arrow"/>
+  
+  <!-- Collections to Product Collections -->
+  <path d="M 540 600 L 590 560" class="relationship-line"/>
+  <polygon points="590,560 585,557 585,563" class="relationship-arrow"/>
+  
+  <!-- Variants to Alerts -->
+  <path d="M 540 400 L 820 460" class="relationship-line"/>
+  <polygon points="820,460 815,457 815,463" class="relationship-arrow"/>
+  
+  <!-- Variants to AI Queue -->
+  <path d="M 540 200 L 1070 200" class="relationship-line"/>
+  <polygon points="1070,200 1065,197 1065,203" class="relationship-arrow"/>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="870" width="300" height="100" fill="none" stroke="#d1d5db" stroke-width="1"/>
+    <text x="60" y="885" class="table-header" font-size="12">Legend</text>
+    
+    <text x="60" y="905" class="primary-key" font-size="10">Red Text: Primary Keys (PK)</text>
+    <text x="60" y="920" class="foreign-key" font-size="10">Green Text: Foreign Keys (FK)</text>
+    <text x="60" y="935" class="field-text" font-size="10">Black Text: Regular Fields</text>
+    <text x="60" y="950" class="field-text" font-size="10" fill="#6b7280">Gray Text: Indexes & Constraints</text>
+    
+    <line x1="200" y1="905" x2="220" y2="905" class="relationship-line"/>
+    <polygon points="220,905 215,902 215,908" class="relationship-arrow"/>
+    <text x="225" y="910" class="field-text" font-size="10">Relationships</text>
+  </g>
+  
+  <!-- Schema Stats -->
+  <g id="stats">
+    <rect x="400" y="870" width="400" height="100" fill="#f9fafb" stroke="#d1d5db" stroke-width="1"/>
+    <text x="410" y="885" class="table-header" font-size="12">Schema Overview</text>
+    
+    <text x="410" y="905" class="field-text" font-size="10">• 11 Core Tables + Views</text>
+    <text x="410" y="920" class="field-text" font-size="10">• Optimized for 3,000+ SKUs with variants</text>
+    <text x="410" y="935" class="field-text" font-size="10">• Full Shopify GraphQL sync support</text>
+    <text x="410" y="950" class="field-text" font-size="10">• AI automation queue for product optimization</text>
+    
+    <text x="600" y="905" class="field-text" font-size="10">• Comprehensive indexing strategy</text>
+    <text x="600" y="920" class="field-text" font-size="10">• Real-time inventory tracking</text>
+    <text x="600" y="935" class="field-text" font-size="10">• Automated sync monitoring</text>
+    <text x="600" y="950" class="field-text" font-size="10">• Multi-location inventory support</text>
+  </g>
+</svg>

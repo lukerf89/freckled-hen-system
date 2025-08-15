@@ -103,39 +103,69 @@ export async function GET(request: NextRequest) {
     `);
     
     const stats = await db.query(`
+      WITH inventory_totals AS (
+        SELECT 
+          il.variant_id,
+          SUM(il.available_quantity) as total_available
+        FROM shopify_inventory_levels il
+        GROUP BY il.variant_id
+      )
       SELECT 
         COUNT(DISTINCT p.id) as total_products,
         COUNT(DISTINCT v.id) as total_variants,
-        COUNT(DISTINCT CASE WHEN v.inventory_quantity > 0 THEN v.id END) as in_stock_variants,
-        COUNT(DISTINCT CASE WHEN v.inventory_quantity = 0 THEN v.id END) as out_of_stock_variants,
-        COUNT(DISTINCT CASE WHEN v.inventory_quantity <= 10 AND v.inventory_quantity > 0 THEN v.id END) as low_stock_variants,
-        SUM(v.inventory_quantity) as total_units,
-        SUM(v.inventory_quantity * v.price) as total_inventory_value,
-        MAX(p.synced_at) as last_sync
+        COUNT(DISTINCT CASE WHEN COALESCE(it.total_available, 0) > 0 THEN v.id END) as in_stock_variants,
+        COUNT(DISTINCT CASE WHEN COALESCE(it.total_available, 0) = 0 THEN v.id END) as out_of_stock_variants,
+        COUNT(DISTINCT CASE WHEN it.total_available <= 10 AND it.total_available > 0 THEN v.id END) as low_stock_variants,
+        SUM(COALESCE(it.total_available, 0)) as total_units,
+        SUM(COALESCE(it.total_available, 0) * v.price) as total_inventory_value,
+        MAX(il.synced_at) as last_sync
       FROM shopify_products p
       LEFT JOIN shopify_variants v ON p.id = v.product_id
+      LEFT JOIN inventory_totals it ON v.id = it.variant_id
+      LEFT JOIN shopify_inventory_levels il ON v.id = il.variant_id
       WHERE p.status = 'ACTIVE'
     `);
     
     const lowStock = await db.query(`
+      WITH inventory_totals AS (
+        SELECT 
+          il.variant_id,
+          SUM(il.available_quantity) as total_available
+        FROM shopify_inventory_levels il
+        GROUP BY il.variant_id
+      )
       SELECT 
         p.title as product_title,
         v.sku,
         v.title as variant_title,
-        v.inventory_quantity
+        COALESCE(it.total_available, 0) as inventory_quantity
       FROM shopify_variants v
       JOIN shopify_products p ON v.product_id = p.id
-      WHERE v.inventory_quantity > 0 
-        AND v.inventory_quantity <= 10
+      LEFT JOIN inventory_totals it ON v.id = it.variant_id
+      WHERE COALESCE(it.total_available, 0) > 0 
+        AND COALESCE(it.total_available, 0) <= 10
         AND p.status = 'ACTIVE'
-      ORDER BY v.inventory_quantity ASC
+      ORDER BY it.total_available ASC
       LIMIT 20
     `);
+    
+    // Transform database field names to match frontend expectations
+    const statsData = stats.rows[0];
+    const formattedStats = {
+      totalProducts: statsData.total_products,
+      totalVariants: statsData.total_variants,
+      inStockVariants: statsData.in_stock_variants,
+      outOfStockVariants: statsData.out_of_stock_variants,
+      lowStockVariants: statsData.low_stock_variants,
+      totalUnits: statsData.total_units,
+      totalInventoryValue: statsData.total_inventory_value,
+      lastSync: statsData.last_sync
+    };
     
     return NextResponse.json({
       success: true,
       syncHistory: syncHistory.rows,
-      stats: stats.rows[0],
+      stats: formattedStats,
       lowStockItems: lowStock.rows,
       timestamp: new Date().toISOString()
     });

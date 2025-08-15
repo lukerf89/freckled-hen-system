@@ -88,6 +88,7 @@ interface SyncResult {
   variantsCount: number;
   locationsCount: number;
   inventoryLevelsCount: number;
+  collectionsCount?: number;
   errors: any[];
   syncId: number;
 }
@@ -516,7 +517,12 @@ export class InventorySync {
     
     for (let i = 0; i < variantsResult.rows.length; i += batchSize) {
       const batch = variantsResult.rows.slice(i, i + batchSize);
-      const variantIds = batch.map(v => `"${v.shopify_gid}"`).join(',');
+      // Escape the GraphQL IDs properly for the query
+      const variantIds = batch.map(v => {
+        // Escape backslashes and quotes in the GID
+        const escapedGid = v.shopify_gid.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        return `\\"${escapedGid}\\"`;
+      }).join(',');
       
       for (const location of locations) {
         const query = `
@@ -528,12 +534,17 @@ export class InventorySync {
                   variant {
                     id
                   }
-                  inventoryLevels(locationIds: ["${location.shopify_gid}"]) {
+                  inventoryLevels(first: 10) {
                     edges {
                       node {
-                        available
-                        incoming
-                        committed
+                        id
+                        location {
+                          id
+                        }
+                        quantities(names: ["available", "incoming", "committed"]) {
+                          name
+                          quantity
+                        }
                         updatedAt
                       }
                     }
@@ -553,33 +564,46 @@ export class InventorySync {
             const variant = batch.find(v => v.shopify_gid === variantGid);
             
             if (variant && item.inventoryLevels.edges.length > 0) {
-              const level = item.inventoryLevels.edges[0].node;
+              // Find the inventory level for the current location
+              const levelEdge = item.inventoryLevels.edges.find((e: any) => 
+                e.node.location.id === location.shopify_gid
+              );
               
-              await db.query(`
-                INSERT INTO shopify_inventory_levels (
-                  variant_id, location_id, inventory_item_id,
-                  available_quantity, incoming_quantity, committed_quantity,
-                  updated_at_shopify, synced_at
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
-                ON CONFLICT (variant_id, location_id) DO UPDATE SET
-                  inventory_item_id = EXCLUDED.inventory_item_id,
-                  available_quantity = EXCLUDED.available_quantity,
-                  incoming_quantity = EXCLUDED.incoming_quantity,
-                  committed_quantity = EXCLUDED.committed_quantity,
-                  updated_at_shopify = EXCLUDED.updated_at_shopify,
-                  synced_at = CURRENT_TIMESTAMP,
-                  updated_at = CURRENT_TIMESTAMP
-              `, [
-                variant.id,
-                location.id,
-                item.id.split('/').pop(),
-                level.available,
-                level.incoming || 0,
-                level.committed || 0,
-                level.updatedAt
-              ]);
-              
-              count++;
+              if (levelEdge) {
+                const level = levelEdge.node;
+                
+                // Extract quantities from the quantities array
+                const quantities = level.quantities.reduce((acc: any, q: any) => {
+                  acc[q.name] = q.quantity;
+                  return acc;
+                }, {});
+                
+                await db.query(`
+                  INSERT INTO shopify_inventory_levels (
+                    variant_id, location_id, inventory_item_id,
+                    available_quantity, incoming_quantity, committed_quantity,
+                    updated_at_shopify, synced_at
+                  ) VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
+                  ON CONFLICT (variant_id, location_id) DO UPDATE SET
+                    inventory_item_id = EXCLUDED.inventory_item_id,
+                    available_quantity = EXCLUDED.available_quantity,
+                    incoming_quantity = EXCLUDED.incoming_quantity,
+                    committed_quantity = EXCLUDED.committed_quantity,
+                    updated_at_shopify = EXCLUDED.updated_at_shopify,
+                    synced_at = CURRENT_TIMESTAMP,
+                    updated_at = CURRENT_TIMESTAMP
+                `, [
+                  variant.id,
+                  location.id,
+                  item.id.split('/').pop(),
+                  quantities.available || 0,
+                  quantities.incoming || 0,
+                  quantities.committed || 0,
+                  level.updatedAt
+                ]);
+                
+                count++;
+              }
             }
           }
         } catch (error) {
@@ -615,7 +639,9 @@ export class InventorySync {
                 handle
                 title
                 sortOrder
-                productsCount
+                productsCount {
+                  count
+                }
                 ruleSet {
                   appliedDisjunctively
                 }
@@ -632,6 +658,8 @@ export class InventorySync {
         const collection = edge.node;
         const shopifyId = collection.id.split('/').pop()!;
         const collectionType = collection.ruleSet ? 'smart' : 'custom';
+        // Extract the count from the productsCount object
+        const productsCount = collection.productsCount?.count || 0;
         
         await db.query(`
           INSERT INTO shopify_collections (
@@ -655,7 +683,7 @@ export class InventorySync {
           collection.title,
           collectionType,
           collection.sortOrder,
-          collection.productsCount,
+          productsCount,
           true,
           collection.updatedAt
         ]);
@@ -767,6 +795,114 @@ export class InventorySync {
       data.error_details ? JSON.stringify(data.error_details) : null,
       data.duration_seconds || 0
     ]);
+  }
+
+  /**
+   * Sync only collections (useful for re-syncing after product sync)
+   */
+  async syncCollectionsOnly(): Promise<SyncResult> {
+    console.log('🚀 Starting collections only sync...');
+    const startTime = Date.now();
+    const errors: any[] = [];
+    
+    try {
+      // Start sync tracking
+      this.syncId = await this.startSyncTracking('collections');
+      
+      // Sync collections
+      console.log('🏷️ Syncing collections...');
+      const collectionsCount = await this.syncCollections();
+      
+      // Complete sync tracking
+      const duration = Math.floor((Date.now() - startTime) / 1000);
+      await this.completeSyncTracking(this.syncId, 'completed', {
+        products_synced: 0,
+        variants_synced: 0,
+        inventory_levels_synced: 0,
+        collections_synced: collectionsCount,
+        errors_count: errors.length,
+        duration_seconds: duration
+      });
+      
+      console.log(`✅ Collections sync completed in ${duration} seconds`);
+      console.log(`   - Collections: ${collectionsCount}`);
+      
+      return {
+        success: true,
+        productsCount: 0,
+        variantsCount: 0,
+        locationsCount: 0,
+        inventoryLevelsCount: 0,
+        collectionsCount: collectionsCount,
+        errors,
+        syncId: this.syncId
+      };
+      
+    } catch (error) {
+      console.error('❌ Collections sync failed:', error);
+      
+      if (this.syncId) {
+        await this.completeSyncTracking(this.syncId, 'failed', {
+          errors_count: 1,
+          error_details: { message: error instanceof Error ? error.message : 'Unknown error' }
+        });
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Sync only inventory levels (useful for re-syncing after product sync)
+   */
+  async syncInventoryLevelsOnly(): Promise<SyncResult> {
+    console.log('🚀 Starting inventory levels only sync...');
+    const startTime = Date.now();
+    const errors: any[] = [];
+    
+    try {
+      // Start sync tracking
+      this.syncId = await this.startSyncTracking('inventory_levels');
+      
+      // Sync inventory levels
+      console.log('📊 Syncing inventory levels...');
+      const inventoryLevelsCount = await this.syncInventoryLevels();
+      
+      // Complete sync tracking
+      const duration = Math.floor((Date.now() - startTime) / 1000);
+      await this.completeSyncTracking(this.syncId, 'completed', {
+        products_synced: 0,
+        variants_synced: 0,
+        inventory_levels_synced: inventoryLevelsCount,
+        errors_count: errors.length,
+        duration_seconds: duration
+      });
+      
+      console.log(`✅ Inventory levels sync completed in ${duration} seconds`);
+      console.log(`   - Inventory Levels: ${inventoryLevelsCount}`);
+      
+      return {
+        success: true,
+        productsCount: 0,
+        variantsCount: 0,
+        locationsCount: 0,
+        inventoryLevelsCount,
+        errors,
+        syncId: this.syncId
+      };
+      
+    } catch (error) {
+      console.error('❌ Inventory levels sync failed:', error);
+      
+      if (this.syncId) {
+        await this.completeSyncTracking(this.syncId, 'failed', {
+          errors_count: 1,
+          error_details: { message: error instanceof Error ? error.message : 'Unknown error' }
+        });
+      }
+      
+      throw error;
+    }
   }
 
   /**
