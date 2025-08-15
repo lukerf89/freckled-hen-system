@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import InventoryAlertsSection from '@/components/inventory-kpis/InventoryAlertsSection';
 import InventoryMetricsGrid from '@/components/inventory-kpis/InventoryMetricsGrid';
@@ -10,16 +9,35 @@ import InventoryChartsSection from '@/components/inventory-kpis/InventoryChartsS
 
 export default function InventoryKPIPage() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [kpiData, setKpiData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: kpiData, isLoading, refetch } = useQuery({
-    queryKey: ['inventory-kpis'],
-    queryFn: fetchInventoryKPIs,
-    refetchInterval: 5 * 60 * 1000, // 5-minute refresh
-    refetchOnWindowFocus: true,
-  });
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/inventory-kpis/dashboard');
+      if (response.ok) {
+        const data = await response.json();
+        setKpiData(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch inventory KPIs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    
+    // Auto-refresh every 5 minutes
+    const interval = setInterval(fetchData, 5 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleRefresh = async () => {
-    await refetch();
+    await fetchData();
     setLastRefresh(new Date());
   };
 
@@ -53,12 +71,4 @@ export default function InventoryKPIPage() {
       <InventoryChartsSection charts={kpiData?.charts || {}} />
     </div>
   );
-}
-
-async function fetchInventoryKPIs() {
-  const response = await fetch('/api/inventory-kpis/dashboard');
-  if (!response.ok) {
-    throw new Error('Failed to fetch inventory KPIs');
-  }
-  return response.json();
 }
