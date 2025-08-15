@@ -11,7 +11,14 @@
       "Bash(git push:*)",
       "Bash(psql:*)",
       "Bash(pkill:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(vercel:*)",
+      "Bash(npm i:*)",
+      "Bash(tsx scripts/verify-profitability-schema.ts:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npm run tsx:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": []
