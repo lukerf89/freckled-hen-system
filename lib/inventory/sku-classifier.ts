@@ -139,8 +139,8 @@ export class SKUClassifier {
     } = product;
     
     // 1. Calculate margin percentage
-    const retailPrice = parseFloat(price) || 0;
-    const cost = parseFloat(wholesale_cost) || 0;
+    const retailPrice = parseFloat(price.toString()) || 0;
+    const cost = parseFloat((wholesale_cost || '0').toString()) || 0;
     let margin_percentage = 0;
     
     if (retailPrice > 0 && cost > 0) {
@@ -303,7 +303,7 @@ export class SKUClassifier {
    */
   private static calculateCashImpactScore(margin: number, price: number, quantity: number, isQ4: boolean): number {
     const qty = parseInt(quantity.toString()) || 0;
-    const retailPrice = parseFloat(price) || 0;
+    const retailPrice = parseFloat(price.toString()) || 0;
     
     // Base score: margin × weekly revenue potential
     const weeklyRevenuePotential = (qty > 0 ? Math.min(qty / 4, 10) : 0) * retailPrice; // Conservative weekly sales
