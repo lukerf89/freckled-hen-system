@@ -5,7 +5,7 @@
  */
 
 import { db } from '../db/connection';
-import { shopifyClient } from '../shopify/client';
+import { ShopifyClient } from '../shopify/client';
 
 export interface SalesVelocityData {
   variant_id: number;
@@ -195,7 +195,8 @@ export class SalesVelocityCalculator {
 
       while (hasNextPage && pageCount < 20) { // Limit to prevent runaway
         console.log(`   📦 Fetching orders page ${pageCount + 1}...`);
-        const response = await shopifyClient.request(query);
+        const shopifyClient = new ShopifyClient();
+        const response = await shopifyClient.getClient().request(query);
         
         if (response.orders?.edges) {
           // Process orders into sales data
