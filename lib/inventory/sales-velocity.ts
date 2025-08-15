@@ -196,7 +196,7 @@ export class SalesVelocityCalculator {
       while (hasNextPage && pageCount < 20) { // Limit to prevent runaway
         console.log(`   📦 Fetching orders page ${pageCount + 1}...`);
         const shopifyClient = new ShopifyClient();
-        const response = await shopifyClient.getClient().request(query);
+        const response = await shopifyClient.getClient().request(query) as any;
         
         if (response.orders?.edges) {
           // Process orders into sales data
