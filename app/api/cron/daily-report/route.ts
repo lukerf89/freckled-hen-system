@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { KPICalculator } from '@/lib/kpi/calculator';
+import { SlackIntegration } from '@/lib/notifications/slack-integration';
 
 interface SlackBlock {
   type: string;
@@ -36,8 +37,18 @@ export async function GET(request: NextRequest) {
     // Format data for Slack
     const slackMessage = formatKPIForSlack(snapshot);
     
-    // Send to Slack
+    // Send standard KPI report to Slack
     const slackResponse = await sendSlackNotification(slackMessage);
+    
+    // Send enhanced CFO Intelligence report
+    console.log('📊 Sending CFO Intelligence Report...');
+    try {
+      const cfoReport = await SlackIntegration.sendDailyReport();
+      console.log('✅ CFO Intelligence Report sent:', cfoReport.success ? 'Success' : 'Failed');
+    } catch (cfoError) {
+      console.error('⚠️ CFO Intelligence Report failed (non-critical):', cfoError);
+      // Don't fail the entire cron job if CFO report fails
+    }
     
     console.log('✅ Daily KPI Report Sent Successfully');
     
