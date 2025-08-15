@@ -15,7 +15,6 @@ function getPool(): Pool {
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000, // Increased to 10 seconds
-      acquireTimeoutMillis: 60000, // Wait up to 60 seconds for connection from pool
       query_timeout: 30000, // 30 second query timeout
       statement_timeout: 30000, // 30 second statement timeout
       ssl: {
